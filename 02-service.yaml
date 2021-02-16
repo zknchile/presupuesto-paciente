@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: presupuesto-paciente 
+  labels:
+    app: presupuesto
+spec:
+  ports:
+    - port: 8087
+      name: presupuesto-paciente
+      targetPort: 8080
+  selector:
+    app: presupuesto
+    tier: frontend
+  type: LoadBalancer
