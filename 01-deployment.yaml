@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: presupuesto-paciente
+  labels:
+    app: presupuesto
+    tier: frontend
+spec:
+  selector:
+    matchLabels:
+      app: presupuesto
+      tier: frontend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: presupuesto
+        tier: frontend
+    spec:
+      containers:
+      - image: registry.qa.os.cl/root/presupuesto-paciente:4.1-dev
+        imagePullPolicy: IfNotPresent
+        name: presupuesto
+        env:
+        - name: PROFILES_ACTIVE
+          value: des
+        - name: FLOW_DB_URL
+          value: jdbc:oracle:thin:@172.26.46.22:1521:LYCDMDEV
+        - name: FLOW_DB_USER
+          value: MEDISYN_5
+        - name: FLOW_DB_PASS
+          value: TEST
+        - name: flowable.databaseSchemaUpdate
+          value: none
+        - name: URL_BFF_SERVICE
+          value: http://172.26.45.16:8084
+        - name: FLOW_ELEMENTS_LIMIT
+          value: 7
+        ports:
+        - containerPort: 8080
+          name: presupuesto
